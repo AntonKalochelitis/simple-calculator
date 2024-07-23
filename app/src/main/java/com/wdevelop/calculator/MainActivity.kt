@@ -3,6 +3,8 @@ package com.wdevelop.calculator
 import android.util.Log
 import android.os.Bundle
 import android.view.animation.AnimationUtils
+import android.util.TypedValue
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,9 @@ class MainActivity : AppCompatActivity() {
 
         display = findViewById(R.id.textView)
 
+        // Применение динамического размера шрифта для кнопок
+        applyDynamicTextSize()
+
         val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
@@ -24,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4,
             R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9,
             R.id.buttonAdd, R.id.buttonSub, R.id.buttonMul, R.id.buttonDiv,
-            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonSign, R.id.buttonPercent
+            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent // R.id.buttonSign, TODO: Доработать функционал
         )
 
         buttons.forEach { id ->
@@ -39,6 +44,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun applyDynamicTextSize() {
+        val buttons = listOf(
+            R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4,
+            R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9,
+            R.id.buttonAdd, R.id.buttonSub, R.id.buttonMul, R.id.buttonDiv,
+            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent // R.id.buttonSign, TODO: Доработать функционал
+        )
+
+        buttons.forEach { id ->
+            val button = findViewById<Button>(id)
+            button.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    button.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    // Получаем размеры кнопки
+                    val buttonWidth = button.width
+                    val buttonHeight = button.height
+
+                    Log.d("buttonWidth", "buttonWidth: $buttonWidth")
+                    Log.d("buttonHeight", "buttonHeight: $buttonHeight")
+
+                    // Рассчитываем размер шрифта, например, 20% от высоты кнопки
+                    val textSize = (buttonWidth * 0.34).toFloat()
+                    Log.d("textSize", "textSize: $textSize")
+
+                    // Устанавливаем размер шрифта
+                    button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                }
+            })
+        }
+    }
+
     private fun onButtonClick(button: Button) {
         when (button.text) {
             "AC" -> clear()
@@ -50,9 +87,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clear() {
-        val textSize = resources.getDimension(R.dimen.button_text_size)
-        Log.d("DimenLogger2", "Current button text size: $textSize")
-
         currentExpression = ""
         display.text = "0"
     }
