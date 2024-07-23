@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var display: TextView
-    private var currentNumber = ""
-    private var operator = ""
-    private var operand1: String? = null
+    private var currentExpression = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,83 +43,76 @@ class MainActivity : AppCompatActivity() {
         when (button.text) {
             "AC" -> clear()
             "=" -> calculate()
-            "+", "-", "*", "/", "%" -> setOperator(button.text.toString())
+            "+", "-", "*", "/", "%" -> appendOperator(button.text.toString())
             "+/-" -> toggleSign()
             else -> appendNumber(button.text.toString())
         }
     }
 
     private fun clear() {
-        currentNumber = ""
-        operator = ""
-        operand1 = null
+        val textSize = resources.getDimension(R.dimen.button_text_size)
+        Log.d("DimenLogger2", "Current button text size: $textSize")
+
+        currentExpression = ""
         display.text = "0"
     }
 
     private fun calculate() {
         Log.d("MainActivity", "Calculate button pressed")
-        Log.d("MainActivity", "CurrentNumber: $currentNumber")
-        Log.d("MainActivity", "Operator: $operator")
-        Log.d("MainActivity", "Operand1: $operand1")
+        Log.d("MainActivity", "CurrentExpression: $currentExpression")
 
-        if (operator.isNotEmpty() && operand1 != null) {
-            val op1 = operand1?.let {
-                if (it.endsWith("%")) {
-                    it.removeSuffix("%").toDoubleOrNull()?.div(100) ?: 0.0
-                } else {
-                    it.toDoubleOrNull() ?: 0.0
-                }
-            } ?: 0.0
-
-            val op2 = currentNumber.let {
-                if (it.endsWith("%")) {
-                    it.removeSuffix("%").toDoubleOrNull()?.div(100) ?: 0.0
-                } else {
-                    it.toDoubleOrNull() ?: 0.0
-                }
-            }
-
-            val result = when (operator) {
-                "+" -> (op1 + op2).removeTrailingZeroes()
-                "-" -> (op1 - op2).removeTrailingZeroes()
-                "*" -> (op1 * op2).removeTrailingZeroes()
-                "/" -> if (op2 != 0.0) (op1 / op2).removeTrailingZeroes() else "Error"
-                "%" -> (op1 * op2 / 100).removeTrailingZeroes()
-                else -> "0"
-            }
-
+        try {
+            val result = evaluateExpression(currentExpression)
             Log.d("MainActivity", "Result: $result")
 
             display.text = result
-            currentNumber = result
-            operator = ""
-            operand1 = null
+            currentExpression = result
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error calculating expression", e)
+            display.text = "Error"
         }
     }
 
-    private fun setOperator(op: String) {
-        if (currentNumber.isNotEmpty()) {
-            operand1 = currentNumber
-            operator = op
-            currentNumber = ""
-            display.text = "$operand1$operator"
+    private fun appendOperator(op: String) {
+        if (currentExpression.isNotEmpty() && !isLastCharOperator()) {
+            currentExpression += op
+            display.text = currentExpression
         }
     }
 
     private fun appendNumber(number: String) {
-        currentNumber += number
-        display.text = currentNumber
+        currentExpression += number
+        display.text = currentExpression
     }
 
     private fun toggleSign() {
-        if (currentNumber.isNotEmpty()) {
-            currentNumber = if (currentNumber.startsWith("-")) {
-                currentNumber.substring(1)
-            } else {
-                "-$currentNumber"
+        // Implement sign toggle if needed
+    }
+
+    private fun isLastCharOperator(): Boolean {
+        return currentExpression.lastOrNull()?.let { it == '+' || it == '-' || it == '*' || it == '/' || it == '%' } ?: false
+    }
+
+    private fun evaluateExpression(expression: String): String {
+        val tokens = expression.split("(?<=[-+*/%])|(?=[-+*/%])".toRegex())
+        var result = tokens[0].toDouble()
+
+        var i = 1
+        while (i < tokens.size) {
+            val operator = tokens[i]
+            val nextNumber = tokens[i + 1].toDouble()
+            result = when (operator) {
+                "+" -> result + nextNumber
+                "-" -> result - nextNumber
+                "*" -> result * nextNumber
+                "/" -> result / nextNumber
+                "%" -> result / 100 * nextNumber
+                else -> result
             }
-            display.text = currentNumber
+            i += 2
         }
+
+        return result.removeTrailingZeroes()
     }
 
     private fun Double.removeTrailingZeroes(): String {

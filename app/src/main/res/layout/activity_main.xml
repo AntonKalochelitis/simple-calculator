@@ -24,8 +24,7 @@
         android:rowCount="5">
 
         <!-- Row 1 -->
-        <Button android:id="@+id/buttonClear" android:text="AC" style="@style/CalcButton"
-            android:background="@android:color/holo_red_light" />
+        <Button android:id="@+id/buttonClear" android:text="AC" style="@style/CalcButton" />
         <Button android:id="@+id/buttonSign" android:text="+/-" style="@style/CalcButton" />
         <Button android:id="@+id/buttonPercent" android:text="%" style="@style/CalcButton" />
         <Button android:id="@+id/buttonDiv" android:text="/" style="@style/CalcButton" />
