@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:textSize="32sp"
         android:gravity="end"
-        android:background="#EFEFEF"
+        android:textColor="@color/text_color"
+        android:background="@color/background_color"
         android:padding="16dp"
         android:text="0" />
 
