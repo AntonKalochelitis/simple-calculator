@@ -2,14 +2,23 @@ package com.wdevelop.calculator
 
 import android.util.Log
 import android.os.Bundle
-import android.view.animation.AnimationUtils
 import android.util.TypedValue
 import android.view.ViewTreeObserver
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.wdevelop.calculator.ui.theme.CalculatorTheme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     private lateinit var display: TextView
     private var currentExpression = ""
 
@@ -22,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Применение динамического размера шрифта для кнопок
         applyDynamicTextSize()
 
+        // Эфекты нажатия кнопки
         val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
@@ -149,6 +159,9 @@ class MainActivity : AppCompatActivity() {
         return result.removeTrailingZeroes()
     }
 
+    /**
+     * удаляет незначащие нули после десятичной точки
+     */
     private fun Double.removeTrailingZeroes(): String {
         return if (this == this.toInt().toDouble()) this.toInt().toString() else this.toString()
     }
