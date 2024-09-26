@@ -29,8 +29,8 @@ class MainActivity : ComponentActivity() {
         val buttons = listOf(
             R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4,
             R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9,
-            R.id.buttonAdd, R.id.buttonSub, R.id.buttonMul, R.id.buttonDiv,
-            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent // R.id.buttonSign, TODO: Доработать функционал
+            R.id.buttonAdd, R.id.buttonSub, R.id.buttonMul, R.id.buttonDiv, R.id.buttonBackspace,
+            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent
         )
 
         buttons.forEach { id ->
@@ -50,12 +50,13 @@ class MainActivity : ComponentActivity() {
             R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4,
             R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9,
             R.id.buttonAdd, R.id.buttonSub, R.id.buttonMul, R.id.buttonDiv,
-            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent // R.id.buttonSign, TODO: Доработать функционал
+            R.id.buttonEqual, R.id.buttonClear, R.id.buttonDot, R.id.buttonPercent
         )
 
         buttons.forEach { id ->
             val button = findViewById<Button>(id)
-            button.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            button.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     button.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
             "AC" -> clear()
             "=" -> calculate()
             "+", "-", "*", "/", "%" -> appendOperator(button.text.toString())
-            "+/-" -> toggleSign()
+            "←" -> removeLastCharacter()
             else -> appendNumber(button.text.toString())
         }
     }
@@ -108,6 +109,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun removeLastCharacter() {
+        if (currentExpression.isNotEmpty()) {
+            currentExpression = currentExpression.dropLast(1) // Удаляем последний символ
+            display.text = if (currentExpression.isEmpty()) "0" else currentExpression
+        }
+    }
+
     private fun appendOperator(op: String) {
         if (currentExpression.isNotEmpty() && !isLastCharOperator()) {
             currentExpression += op
@@ -116,16 +124,23 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun appendNumber(number: String) {
+        if (currentExpression == "0" && number == "0") {
+            // Если текущее выражение равно "0" и пользователь вводит еще один "0", то ничего не добавляем
+            return
+        }
+
+        if (number == "." && currentExpression.contains(".")) {
+            // Если текущая строка уже содержит точку, не добавляем её
+            return
+        }
+
         currentExpression += number
         display.text = currentExpression
     }
 
-    private fun toggleSign() {
-        // Implement sign toggle if needed
-    }
-
     private fun isLastCharOperator(): Boolean {
-        return currentExpression.lastOrNull()?.let { it == '+' || it == '-' || it == '*' || it == '/' || it == '%' } ?: false
+        return currentExpression.lastOrNull()
+            ?.let { it == '+' || it == '-' || it == '*' || it == '/' || it == '%' } ?: false
     }
 
     private fun evaluateExpression(expression: String): String {
@@ -154,6 +169,6 @@ class MainActivity : ComponentActivity() {
      * удаляет незначащие нули после десятичной точки
      */
     private fun Double.removeTrailingZeroes(): String {
-        return if (this == this.toInt().toDouble()) this.toInt().toString() else this.toString()
+        return if (this == this.toLong().toDouble()) this.toLong().toString() else this.toString()
     }
 }

@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,12 +9,14 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
-        android:gravity="end"
-        android:textColor="@color/text_color"
         android:background="@color/background_color"
+        android:gravity="end"
+        android:maxLength="17"
         android:padding="16dp"
-        android:text="0" />
+        android:text="0"
+        android:textColor="@color/text_color"
+        android:textSize="32sp" /> <!-- Установите нужное количество символов -->
+
 
     <GridLayout
         android:layout_width="match_parent"
@@ -26,33 +27,125 @@
         android:rowCount="5">
 
         <!-- Row 1 -->
-        <Button android:id="@+id/buttonClear" android:text="AC" style="@style/CalcButtonRed" android:layout_columnSpan="2" />
-<!--        <Button android:id="@+id/buttonSign" android:text="+/-" style="@style/CalcButtonBlue" />-->
-        <Button android:id="@+id/buttonPercent" android:text="%" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/buttonDiv" android:text="/" style="@style/CalcButtonBlue" />
+        <Button
+            android:id="@+id/buttonClear"
+            style="@style/CalcButtonRed"
+            android:layout_columnSpan="2"
+            android:contentDescription="All Clear"
+            android:text="AC" />
+        <!--        <Button android:id="@+id/buttonSign" android:text="+/-" android:contentDescription="Digit A" style="@style/CalcButtonBlue" />-->
+        <Button
+            android:id="@+id/buttonPercent"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Calculating Percentage"
+            android:text="%" />
+
+        <Button
+            android:id="@+id/buttonDiv"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Division"
+            android:text="/" />
 
         <!-- Row 2 -->
-        <Button android:id="@+id/button7" android:text="7" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button8" android:text="8" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button9" android:text="9" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/buttonMul" android:text="*" style="@style/CalcButtonBlue" />
+        <Button
+            android:id="@+id/button7"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 7"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/button8"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 8"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/button9"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 9"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/buttonMul"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Multiplication"
+            android:text="*" />
 
         <!-- Row 3 -->
-        <Button android:id="@+id/button4" android:text="4" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button5" android:text="5" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button6" android:text="6" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/buttonSub" android:text="-" style="@style/CalcButtonBlue" />
+        <Button
+            android:id="@+id/button4"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 4"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/button5"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 5"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/button6"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 6"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/buttonSub"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Minus"
+            android:text="-" />
 
         <!-- Row 4 -->
-        <Button android:id="@+id/button1" android:text="1" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button2" android:text="2" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/button3" android:text="3" style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/buttonAdd" android:text="+" style="@style/CalcButtonBlue" />
+        <Button
+            android:id="@+id/button1"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 1"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 2"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/button3"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 3"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Plus"
+            android:text="+" />
 
         <!-- Row 5 -->
-        <Button android:id="@+id/button0" android:text="0" style="@style/CalcButtonBlue" android:layout_columnSpan="2" />
-        <Button android:id="@+id/buttonDot" android:text="." style="@style/CalcButtonBlue" />
-        <Button android:id="@+id/buttonEqual" android:text="=" style="@style/CalcButtonBlue" />
+        <Button
+            android:id="@+id/button0"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 0"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/buttonBackspace"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Backspace"
+            android:text="←"
+            android:textSize="60sp" />
+
+        <Button
+            android:id="@+id/buttonDot"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Dot"
+            android:text="." />
+
+        <Button
+            android:id="@+id/buttonEqual"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Equals"
+            android:text="=" />
 
     </GridLayout>
 </LinearLayout>
