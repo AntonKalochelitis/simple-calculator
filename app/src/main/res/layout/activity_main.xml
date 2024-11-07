@@ -121,19 +121,18 @@
             android:contentDescription="Plus"
             android:text="+" />
 
-        <!-- Row 5 -->
-        <Button
-            android:id="@+id/button0"
-            style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 0"
-            android:text="0" />
-
         <Button
             android:id="@+id/buttonBackspace"
             style="@style/CalcButtonBlue"
             android:contentDescription="Backspace"
             android:text="←"
             android:textSize="60sp" />
+
+        <Button
+            android:id="@+id/button0"
+            style="@style/CalcButtonBlue"
+            android:contentDescription="Digit 0"
+            android:text="0" />
 
         <Button
             android:id="@+id/buttonDot"

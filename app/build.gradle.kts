@@ -11,8 +11,8 @@ android {
         applicationId = "com.wdevelop.calculator"
         minSdk = 21
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.0.11"
+        versionCode = 13
+        versionName = "1.0.13"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
