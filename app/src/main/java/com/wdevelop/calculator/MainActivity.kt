@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     private lateinit var display: TextView
@@ -106,7 +108,7 @@ class MainActivity : ComponentActivity() {
             currentExpression = result
         } catch (e: Exception) {
             Log.e("MainActivity", "Error calculating expression", e)
-            display.text = "Error"
+            display.text = getString(R.string.error_display_text)
         }
     }
 
@@ -125,8 +127,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun appendNumber(number: String) {
+        // Преобразуем запятую в точку
+        val number = if (number == ",") "." else number
+
+        // Если текущее выражение равно "0" и пользователь вводит еще один "0", то ничего не добавляем
         if (currentExpression == "0" && number == "0") {
-            // Если текущее выражение равно "0" и пользователь вводит еще один "0", то ничего не добавляем
             return
         }
 
@@ -175,8 +180,8 @@ class MainActivity : ComponentActivity() {
      * Удаляет незначащие нули после десятичной точки
      */
     private fun Double.removeTrailingZeroes(): String {
-        val decimalFormat =
-            DecimalFormat("#.##########") // Настраиваем формат для 10 знаков после запятой
+        // Настраиваем формат для 10 знаков после запятой
+        val decimalFormat = DecimalFormat("#.##########", DecimalFormatSymbols(Locale.US))
         decimalFormat.isDecimalSeparatorAlwaysShown = false
         return decimalFormat.format(this)
     }

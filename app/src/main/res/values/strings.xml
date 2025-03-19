@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Calculator WDEVELOP</string>
+    <string name="error_display_text">Error</string>
 </resources>
