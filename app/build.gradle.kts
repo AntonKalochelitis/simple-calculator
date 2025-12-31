@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.wdevelop.calculator"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.wdevelop.calculator"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 16
-        versionName = "1.0.16"
+        targetSdk = 35
+        versionCode = 18
+        versionName = "1.0.18"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
