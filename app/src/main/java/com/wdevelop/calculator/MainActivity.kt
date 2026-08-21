@@ -18,7 +18,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        
+        // Manual check for Android 15+ to avoid calling deprecated APIs if library triggers warnings
+        if (android.os.Build.VERSION.SDK_INT < 35) {
+            enableEdgeToEdge()
+        }
+        
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -79,7 +84,7 @@ class MainActivity : ComponentActivity() {
         val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
-        val buttons = listOf(
+        val buttonIds = listOf(
             binding.button0, binding.button1, binding.button2, binding.button3,
             binding.button4, binding.button5, binding.button6, binding.button7,
             binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
@@ -88,11 +93,12 @@ class MainActivity : ComponentActivity() {
             binding.buttonPercent, binding.buttonOpenBracket, binding.buttonCloseBracket
         )
 
-        buttons.forEach { button ->
+        buttonIds.forEach { button ->
             button.setOnClickListener {
                 it.startAnimation(fadeOut)
+                val text = button.text.toString()
                 it.postDelayed({
-                    handleButtonClick(button.text.toString())
+                    handleButtonClick(text)
                     it.startAnimation(fadeIn)
                 }, fadeOut.duration)
             }
