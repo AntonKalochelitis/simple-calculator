@@ -1,287 +1,136 @@
 package com.wdevelop.calculator
 
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
-import android.view.ViewTreeObserver
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
+import com.wdevelop.calculator.databinding.ActivityMainBinding
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var display: TextView
+    private lateinit var binding: ActivityMainBinding
+    private val engine = CalculatorEngine()
     private var currentExpression = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Включаем edge-to-edge с обратной совместимостью.
         enableEdgeToEdge()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(R.layout.activity_main)
-
-        val root = findViewById<LinearLayout>(R.id.rootLayout)
-
-        // Базовый отступ интерфейса — 16dp.
-        val basePadding = (16 * resources.displayMetrics.density).toInt()
-
-        // Учитываем системные панели Android:
-        // status bar, navigation bar и т.д.
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-            )
-
-            view.setPadding(
-                basePadding + insets.left,
-                basePadding + insets.top,
-                basePadding + insets.right,
-                basePadding + insets.bottom
-            )
-
-            windowInsets
-        }
-
-        display = findViewById(R.id.textView)
-
-        // Применение динамического размера шрифта для кнопок.
+        setupInsets()
+        setupButtons()
         applyDynamicTextSize()
 
-        // Эффекты нажатия кнопки.
-        val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
-        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-
-        val buttons = listOf(
-            R.id.button0,
-            R.id.button1,
-            R.id.button2,
-            R.id.button3,
-            R.id.button4,
-            R.id.button5,
-            R.id.button6,
-            R.id.button7,
-            R.id.button8,
-            R.id.button9,
-            R.id.buttonAdd,
-            R.id.buttonSub,
-            R.id.buttonMul,
-            R.id.buttonDiv,
-            R.id.buttonBackspace,
-            R.id.buttonEqual,
-            R.id.buttonClear,
-            R.id.buttonDot,
-            R.id.buttonPercent
-        )
-
-        buttons.forEach { id ->
-            val button = findViewById<Button>(id)
-
-            button.setOnClickListener {
-                button.startAnimation(fadeOut)
-
-                it.postDelayed({
-                    onButtonClick(button)
-                    button.startAnimation(fadeIn)
-                }, fadeOut.duration)
-            }
+        if (savedInstanceState != null) {
+            currentExpression = savedInstanceState.getString("expression", "")
+            updateDisplay()
         }
     }
 
     private fun applyDynamicTextSize() {
         val buttons = listOf(
-            R.id.button0,
-            R.id.button1,
-            R.id.button2,
-            R.id.button3,
-            R.id.button4,
-            R.id.button5,
-            R.id.button6,
-            R.id.button7,
-            R.id.button8,
-            R.id.button9,
-            R.id.buttonAdd,
-            R.id.buttonSub,
-            R.id.buttonMul,
-            R.id.buttonDiv,
-            R.id.buttonEqual,
-            R.id.buttonClear,
-            R.id.buttonDot,
-            R.id.buttonPercent
+            binding.button0, binding.button1, binding.button2, binding.button3,
+            binding.button4, binding.button5, binding.button6, binding.button7,
+            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
+            binding.buttonMul, binding.buttonDiv, binding.buttonEqual,
+            binding.buttonClear, binding.buttonDot, binding.buttonPercent
         )
 
-        buttons.forEach { id ->
-            val button = findViewById<Button>(id)
-
+        buttons.forEach { button ->
             button.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-
+                object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         button.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
                         val buttonWidth = button.width
-                        val buttonHeight = button.height
-
-                        Log.d(
-                            "Calculator",
-                            "buttonWidth: $buttonWidth, buttonHeight: $buttonHeight"
-                        )
-
                         val textSize = (buttonWidth * 0.34).toFloat()
-
-                        Log.d(
-                            "Calculator",
-                            "textSize: $textSize"
-                        )
-
-                        button.setTextSize(
-                            TypedValue.COMPLEX_UNIT_PX,
-                            textSize
-                        )
+                        button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, textSize)
                     }
                 }
             )
         }
     }
 
-    private fun onButtonClick(button: Button) {
-        when (button.text) {
-            "AC" -> clear()
-            "=" -> calculate()
-            "+", "-", "*", "/", "%" ->
-                appendOperator(button.text.toString())
-
-            "←" -> removeLastCharacter()
-
-            else -> appendNumber(button.text.toString())
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("expression", currentExpression)
     }
 
-    private fun clear() {
-        currentExpression = ""
-        display.text = "0"
-    }
-
-    private fun calculate() {
-        Log.d("MainActivity", "Calculate button pressed")
-        Log.d("MainActivity", "CurrentExpression: $currentExpression")
-
-        try {
-            val result = evaluateExpression(currentExpression)
-
-            Log.d("MainActivity", "Result: $result")
-
-            display.text = result
-            currentExpression = result
-
-        } catch (e: Exception) {
-            Log.e(
-                "MainActivity",
-                "Error calculating expression",
-                e
+    private fun setupInsets() {
+        val basePadding = (16 * resources.displayMetrics.density).toInt()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                basePadding + insets.left,
+                basePadding + insets.top,
+                basePadding + insets.right,
+                basePadding + insets.bottom
             )
-
-            display.text = getString(R.string.error_display_text)
+            windowInsets
         }
     }
 
-    private fun removeLastCharacter() {
-        if (currentExpression.isNotEmpty()) {
-            currentExpression = currentExpression.dropLast(1)
+    private fun setupButtons() {
+        val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
-            display.text =
-                if (currentExpression.isEmpty()) {
-                    "0"
-                } else {
-                    currentExpression
-                }
-        }
-    }
-
-    private fun appendOperator(op: String) {
-        if (currentExpression.isNotEmpty() && !isLastCharOperator()) {
-            currentExpression += op
-            display.text = currentExpression
-        }
-    }
-
-    private fun appendNumber(number: String) {
-        val normalizedNumber =
-            if (number == ",") "." else number
-
-        if (currentExpression == "0" && normalizedNumber == "0") {
-            return
-        }
-
-        val parts = currentExpression.split("[-+*/%]".toRegex())
-        val currentNumber = parts.lastOrNull() ?: ""
-
-        if (
-            normalizedNumber == "." &&
-            currentNumber.contains(".")
-        ) {
-            return
-        }
-
-        currentExpression += normalizedNumber
-        display.text = currentExpression
-    }
-
-    private fun isLastCharOperator(): Boolean {
-        return currentExpression.lastOrNull()
-            ?.let {
-                it == '+' ||
-                        it == '-' ||
-                        it == '*' ||
-                        it == '/' ||
-                        it == '%'
-            } ?: false
-    }
-
-    private fun evaluateExpression(expression: String): String {
-        val tokens = expression.split(
-            "(?<=[-+*/%])|(?=[-+*/%])".toRegex()
+        val buttons = listOf(
+            binding.button0, binding.button1, binding.button2, binding.button3,
+            binding.button4, binding.button5, binding.button6, binding.button7,
+            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
+            binding.buttonMul, binding.buttonDiv, binding.buttonBackspace,
+            binding.buttonEqual, binding.buttonClear, binding.buttonDot,
+            binding.buttonPercent
         )
 
-        var result = tokens[0].toDouble()
-
-        var i = 1
-
-        while (i < tokens.size) {
-            val operator = tokens[i]
-            val nextNumber = tokens[i + 1].toDouble()
-
-            result = when (operator) {
-                "+" -> result + nextNumber
-                "-" -> result - nextNumber
-                "*" -> result * nextNumber
-                "/" -> result / nextNumber
-                "%" -> result / 100 * nextNumber
-                else -> result
+        buttons.forEach { button ->
+            button.setOnClickListener {
+                it.startAnimation(fadeOut)
+                it.postDelayed({
+                    handleButtonClick(button.text.toString())
+                    it.startAnimation(fadeIn)
+                }, fadeOut.duration)
             }
-
-            i += 2
         }
-
-        return result.removeTrailingZeroes()
     }
 
-    private fun Double.removeTrailingZeroes(): String {
-        val decimalFormat = DecimalFormat(
-            "#.##########",
-            DecimalFormatSymbols(Locale.US)
-        )
+    private fun handleButtonClick(value: String) {
+        when (value) {
+            "AC" -> {
+                currentExpression = ""
+                updateDisplay()
+            }
+            "=" -> {
+                val result = engine.evaluate(currentExpression)
+                when (result) {
+                    is CalculatorEngine.Result.Success -> {
+                        currentExpression = result.value
+                        updateDisplay()
+                    }
+                    is CalculatorEngine.Result.Error -> {
+                        binding.textView.text = result.message
+                        currentExpression = ""
+                    }
+                }
+            }
+            "←" -> {
+                if (currentExpression.isNotEmpty()) {
+                    currentExpression = currentExpression.dropLast(1)
+                    updateDisplay()
+                }
+            }
+            else -> {
+                if (engine.isValidAppend(currentExpression, value)) {
+                    currentExpression += value
+                    updateDisplay()
+                }
+            }
+        }
+    }
 
-        decimalFormat.isDecimalSeparatorAlwaysShown = false
-
-        return decimalFormat.format(this)
+    private fun updateDisplay() {
+        binding.textView.text = if (currentExpression.isEmpty()) "0" else currentExpression
     }
 }

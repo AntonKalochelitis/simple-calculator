@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_color"
+        android:background="@android:color/transparent"
         android:gravity="end"
         android:maxLength="17"
         android:padding="16dp"
         android:text="0"
         android:textColor="@color/text_color"
-        android:textSize="32sp" /> <!-- Установите нужное количество символов -->
-
+        android:textSize="48sp" />
 
     <GridLayout
         android:layout_width="match_parent"
@@ -32,119 +32,139 @@
             android:id="@+id/buttonClear"
             style="@style/CalcButtonRed"
             android:layout_columnSpan="2"
-            android:contentDescription="All Clear"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_ac"
             android:text="AC" />
-        <!--        <Button android:id="@+id/buttonSign" android:text="+/-" android:contentDescription="Digit A" style="@style/CalcButtonBlue" />-->
+
         <Button
             android:id="@+id/buttonPercent"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Calculating Percentage"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_percent"
             android:text="%" />
 
         <Button
             android:id="@+id/buttonDiv"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Division"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_divide"
             android:text="/" />
 
         <!-- Row 2 -->
         <Button
             android:id="@+id/button7"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 7"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_7"
             android:text="7" />
 
         <Button
             android:id="@+id/button8"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 8"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_8"
             android:text="8" />
 
         <Button
             android:id="@+id/button9"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 9"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_9"
             android:text="9" />
 
         <Button
             android:id="@+id/buttonMul"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Multiplication"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_multiply"
             android:text="*" />
 
         <!-- Row 3 -->
         <Button
             android:id="@+id/button4"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 4"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_4"
             android:text="4" />
 
         <Button
             android:id="@+id/button5"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 5"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_5"
             android:text="5" />
 
         <Button
             android:id="@+id/button6"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 6"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_6"
             android:text="6" />
 
         <Button
             android:id="@+id/buttonSub"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Minus"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_subtract"
             android:text="-" />
 
         <!-- Row 4 -->
         <Button
             android:id="@+id/button1"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 1"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_1"
             android:text="1" />
 
         <Button
             android:id="@+id/button2"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 2"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_2"
             android:text="2" />
 
         <Button
             android:id="@+id/button3"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 3"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_3"
             android:text="3" />
 
         <Button
             android:id="@+id/buttonAdd"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Plus"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_add"
             android:text="+" />
 
+        <!-- Row 5 -->
         <Button
             android:id="@+id/buttonBackspace"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Backspace"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_backspace"
             android:text="←"
             android:textSize="60sp" />
 
         <Button
             android:id="@+id/button0"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Digit 0"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_digit_0"
             android:text="0" />
 
         <Button
             android:id="@+id/buttonDot"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Dot"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_dot"
             android:text="." />
 
         <Button
             android:id="@+id/buttonEqual"
             style="@style/CalcButtonBlue"
-            android:contentDescription="Equals"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_equals"
             android:text="=" />
 
     </GridLayout>

@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Calculator WDEVELOP</string>
     <string name="error_display_text">Error</string>
+    <string name="desc_ac">All Clear</string>
+    <string name="desc_percent">Percentage</string>
+    <string name="desc_divide">Divide</string>
+    <string name="desc_multiply">Multiply</string>
+    <string name="desc_subtract">Subtract</string>
+    <string name="desc_add">Add</string>
+    <string name="desc_backspace">Backspace</string>
+    <string name="desc_dot">Decimal Point</string>
+    <string name="desc_equals">Equals</string>
+    <string name="desc_digit_0">Digit 0</string>
+    <string name="desc_digit_1">Digit 1</string>
+    <string name="desc_digit_2">Digit 2</string>
+    <string name="desc_digit_3">Digit 3</string>
+    <string name="desc_digit_4">Digit 4</string>
+    <string name="desc_digit_5">Digit 5</string>
+    <string name="desc_digit_6">Digit 6</string>
+    <string name="desc_digit_7">Digit 7</string>
+    <string name="desc_digit_8">Digit 8</string>
+    <string name="desc_digit_9">Digit 9</string>
 </resources>
