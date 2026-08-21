@@ -25,30 +25,36 @@
         android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:columnCount="4"
-        android:rowCount="5">
+        android:rowCount="6">
 
         <!-- Row 1 -->
         <Button
             android:id="@+id/buttonClear"
             style="@style/CalcButtonRed"
-            android:layout_columnSpan="2"
             android:layout_gravity="fill"
             android:contentDescription="@string/desc_ac"
             android:text="AC" />
 
         <Button
-            android:id="@+id/buttonPercent"
+            android:id="@+id/buttonBackspace"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_percent"
-            android:text="%" />
+            android:contentDescription="@string/desc_backspace"
+            android:text="←" />
 
         <Button
-            android:id="@+id/buttonDiv"
+            android:id="@+id/buttonOpenBracket"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_divide"
-            android:text="/" />
+            android:contentDescription="@string/desc_open_bracket"
+            android:text="@string/bracket_open" />
+
+        <Button
+            android:id="@+id/buttonCloseBracket"
+            style="@style/CalcButtonBlue"
+            android:layout_gravity="fill"
+            android:contentDescription="@string/desc_close_bracket"
+            android:text="@string/bracket_close" />
 
         <!-- Row 2 -->
         <Button
@@ -73,11 +79,11 @@
             android:text="9" />
 
         <Button
-            android:id="@+id/buttonMul"
+            android:id="@+id/buttonDiv"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_multiply"
-            android:text="*" />
+            android:contentDescription="@string/desc_divide"
+            android:text="/" />
 
         <!-- Row 3 -->
         <Button
@@ -102,11 +108,11 @@
             android:text="6" />
 
         <Button
-            android:id="@+id/buttonSub"
+            android:id="@+id/buttonMul"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_subtract"
-            android:text="-" />
+            android:contentDescription="@string/desc_multiply"
+            android:text="*" />
 
         <!-- Row 4 -->
         <Button
@@ -131,20 +137,19 @@
             android:text="3" />
 
         <Button
-            android:id="@+id/buttonAdd"
+            android:id="@+id/buttonSub"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_add"
-            android:text="+" />
+            android:contentDescription="@string/desc_subtract"
+            android:text="-" />
 
         <!-- Row 5 -->
         <Button
-            android:id="@+id/buttonBackspace"
+            android:id="@+id/buttonPercent"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
-            android:contentDescription="@string/desc_backspace"
-            android:text="←"
-            android:textSize="60sp" />
+            android:contentDescription="@string/desc_percent"
+            android:text="%" />
 
         <Button
             android:id="@+id/button0"
@@ -161,9 +166,19 @@
             android:text="." />
 
         <Button
-            android:id="@+id/buttonEqual"
+            android:id="@+id/buttonAdd"
             style="@style/CalcButtonBlue"
             android:layout_gravity="fill"
+            android:contentDescription="@string/desc_add"
+            android:text="+" />
+
+        <!-- Row 6 -->
+        <Button
+            android:id="@+id/buttonEqual"
+            style="@style/CalcButtonBlue"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="0"
             android:contentDescription="@string/desc_equals"
             android:text="=" />
 

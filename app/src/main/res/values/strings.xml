@@ -10,6 +10,10 @@
     <string name="desc_backspace">Backspace</string>
     <string name="desc_dot">Decimal Point</string>
     <string name="desc_equals">Equals</string>
+    <string name="desc_open_bracket">Open Parenthesis</string>
+    <string name="desc_close_bracket">Close Parenthesis</string>
+    <string name="bracket_open">(</string>
+    <string name="bracket_close">)</string>
     <string name="desc_digit_0">Digit 0</string>
     <string name="desc_digit_1">Digit 1</string>
     <string name="desc_digit_2">Digit 2</string>

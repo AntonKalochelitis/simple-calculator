@@ -1,6 +1,8 @@
 package com.wdevelop.calculator
 
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.ViewTreeObserver
 import android.view.animation.AnimationUtils
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -30,29 +32,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun applyDynamicTextSize() {
-        val buttons = listOf(
-            binding.button0, binding.button1, binding.button2, binding.button3,
-            binding.button4, binding.button5, binding.button6, binding.button7,
-            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
-            binding.buttonMul, binding.buttonDiv, binding.buttonEqual,
-            binding.buttonClear, binding.buttonDot, binding.buttonPercent
-        )
-
-        buttons.forEach { button ->
-            button.viewTreeObserver.addOnGlobalLayoutListener(
-                object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        button.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        val buttonWidth = button.width
-                        val textSize = (buttonWidth * 0.34).toFloat()
-                        button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, textSize)
-                    }
-                }
-            )
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("expression", currentExpression)
@@ -72,6 +51,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun applyDynamicTextSize() {
+        val buttons = listOf(
+            binding.button0, binding.button1, binding.button2, binding.button3,
+            binding.button4, binding.button5, binding.button6, binding.button7,
+            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
+            binding.buttonMul, binding.buttonDiv, binding.buttonEqual,
+            binding.buttonClear, binding.buttonDot, binding.buttonPercent,
+            binding.buttonBackspace, binding.buttonOpenBracket, binding.buttonCloseBracket
+        )
+
+        buttons.forEach { button ->
+            button.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        button.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        val buttonHeight = button.height
+                        val textSize = (buttonHeight * 0.45).toFloat()
+                        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                    }
+                }
+            )
+        }
+    }
+
     private fun setupButtons() {
         val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
@@ -82,7 +85,7 @@ class MainActivity : ComponentActivity() {
             binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
             binding.buttonMul, binding.buttonDiv, binding.buttonBackspace,
             binding.buttonEqual, binding.buttonClear, binding.buttonDot,
-            binding.buttonPercent
+            binding.buttonPercent, binding.buttonOpenBracket, binding.buttonCloseBracket
         )
 
         buttons.forEach { button ->
