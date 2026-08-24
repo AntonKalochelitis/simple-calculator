@@ -63,4 +63,22 @@ class CalculatorEngineTest {
         assertEquals("5", eval("2.5+2.5"))
         assertEquals("12", eval("(2.5+3.5)*2"))
     }
+
+    @Test
+    fun testIsValidAppend() {
+        // Decimal point rules
+        assertEquals(false, engine.isValidAppend("", ".")) // Not after empty
+        assertEquals(false, engine.isValidAppend("2+", ".")) // Not after operator
+        assertEquals(true, engine.isValidAppend("2", ".")) // Valid after digit
+        assertEquals(false, engine.isValidAppend("2.5", ".")) // Already has dot in number
+        assertEquals(true, engine.isValidAppend("2.5+", "3"))
+        assertEquals(true, engine.isValidAppend("2.5+3", ".")) // New number, can have dot
+        
+        // Parentheses rules
+        assertEquals(true, engine.isValidAppend("(", "("))
+        assertEquals(true, engine.isValidAppend("2", "(")) // Implicit multiplication
+        assertEquals(false, engine.isValidAppend("", ")")) // No open paren
+        assertEquals(false, engine.isValidAppend("(", ")")) // Empty paren
+        assertEquals(true, engine.isValidAppend("(2", ")")) // Valid close
+    }
 }

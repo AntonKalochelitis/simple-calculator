@@ -163,17 +163,37 @@ class CalculatorEngine {
     }
 
     fun isValidAppend(currentExpression: String, newChar: String): Boolean {
-        // Basic validation, more advanced checks can be added
+        if (newChar == ".") {
+            // Rule 2.1: Allow point only after a digit
+            if (currentExpression.isEmpty() || !currentExpression.last().isDigit()) {
+                return false
+            }
+            // Rule 2.2: Only one point per fractional number
+            val lastNumber = currentExpression.split("[-+*/%()]".toRegex()).last()
+            return !lastNumber.contains(".")
+        }
+
+        if (newChar == "(") {
+            // Rule: Parenthesis can follow an operator or another open parenthesis
+            // or it can be at the start. Implicit multiplication is handled in prepareExpression,
+            // but for UI logic, we might want to restrict it or allow it.
+            // Current engine handles implicit multiplication (e.g. 2( -> 2*( ), so we allow it after digits too.
+            return true
+        }
+
         if (newChar == ")") {
             val openCount = currentExpression.count { it == '(' }
             val closeCount = currentExpression.count { it == ')' }
             return openCount > closeCount && currentExpression.isNotEmpty() && (currentExpression.last().isDigit() || currentExpression.last() == ')')
         }
-        // Operators shouldn't follow other operators (except unary minus logic)
+
         if (isOperator(newChar)) {
-            if (currentExpression.isEmpty() && newChar != "-") return false
-            if (currentExpression.isNotEmpty() && isOperator(currentExpression.last().toString())) return false
+            if (currentExpression.isEmpty()) return newChar == "-"
+            val lastChar = currentExpression.last()
+            if (isOperator(lastChar.toString())) return false
+            if (lastChar == '(') return newChar == "-"
         }
+
         return true
     }
 }

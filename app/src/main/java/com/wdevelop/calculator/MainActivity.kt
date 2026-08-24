@@ -6,6 +6,7 @@ import android.view.ViewTreeObserver
 import android.view.animation.AnimationUtils
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.wdevelop.calculator.databinding.ActivityMainBinding
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
     private var currentExpression = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         
         // Manual check for Android 15+ to avoid calling deprecated APIs if library triggers warnings
