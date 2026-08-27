@@ -1,8 +1,7 @@
 package com.wdevelop.calculator
 
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.ViewTreeObserver
+import android.view.HapticFeedbackConstants
 import android.view.animation.AnimationUtils
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -21,7 +20,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         
-        // Manual check for Android 15+ to avoid calling deprecated APIs if library triggers warnings
         if (android.os.Build.VERSION.SDK_INT < 35) {
             enableEdgeToEdge()
         }
@@ -31,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
         setupInsets()
         setupButtons()
-        applyDynamicTextSize()
 
         if (savedInstanceState != null) {
             currentExpression = savedInstanceState.getString("expression", "")
@@ -58,49 +55,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun applyDynamicTextSize() {
-        val buttons = listOf(
-            binding.button0, binding.button1, binding.button2, binding.button3,
-            binding.button4, binding.button5, binding.button6, binding.button7,
-            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
-            binding.buttonMul, binding.buttonDiv, binding.buttonEqual,
-            binding.buttonClear, binding.buttonDot, binding.buttonPercent,
-            binding.buttonBackspace, binding.buttonOpenBracket, binding.buttonCloseBracket
-        )
-
-        buttons.forEach { button ->
-            button.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        button.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        val buttonHeight = button.height
-                        val textSize = (buttonHeight * 0.45).toFloat()
-                        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-                    }
-                }
-            )
-        }
-    }
-
     private fun setupButtons() {
         val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
-        val buttonIds = listOf(
-            binding.button0, binding.button1, binding.button2, binding.button3,
-            binding.button4, binding.button5, binding.button6, binding.button7,
-            binding.button8, binding.button9, binding.buttonAdd, binding.buttonSub,
-            binding.buttonMul, binding.buttonDiv, binding.buttonBackspace,
-            binding.buttonEqual, binding.buttonClear, binding.buttonDot,
-            binding.buttonPercent, binding.buttonOpenBracket, binding.buttonCloseBracket
+        val buttons = mapOf(
+            binding.button0 to "0", binding.button1 to "1", binding.button2 to "2",
+            binding.button3 to "3", binding.button4 to "4", binding.button5 to "5",
+            binding.button6 to "6", binding.button7 to "7", binding.button8 to "8",
+            binding.button9 to "9", binding.buttonAdd to "+", binding.buttonSub to "-",
+            binding.buttonMul to "*", binding.buttonDiv to "/", 
+            binding.buttonBackspace to "BACK",
+            binding.buttonEqual to "=", binding.buttonClear to "AC", binding.buttonDot to ".",
+            binding.buttonPercent to "%", binding.buttonOpenBracket to "(", binding.buttonCloseBracket to ")"
         )
 
-        buttonIds.forEach { button ->
+        buttons.forEach { (button, value) ->
             button.setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 it.startAnimation(fadeOut)
-                val text = button.text.toString()
                 it.postDelayed({
-                    handleButtonClick(text)
+                    handleButtonClick(value)
                     it.startAnimation(fadeIn)
                 }, fadeOut.duration)
             }
@@ -118,15 +93,16 @@ class MainActivity : ComponentActivity() {
                 when (result) {
                     is CalculatorEngine.Result.Success -> {
                         currentExpression = result.value
-                        updateDisplay()
+                        updateDisplay(isFinal = true)
                     }
                     is CalculatorEngine.Result.Error -> {
                         binding.textView.text = result.message
+                        binding.textViewPreview.text = ""
                         currentExpression = ""
                     }
                 }
             }
-            "←" -> {
+            "BACK" -> {
                 if (currentExpression.isNotEmpty()) {
                     currentExpression = currentExpression.dropLast(1)
                     updateDisplay()
@@ -141,7 +117,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun updateDisplay() {
+    private fun updateDisplay(isFinal: Boolean = false) {
         binding.textView.text = if (currentExpression.isEmpty()) "0" else currentExpression
+        
+        // Auto scroll to the end
+        binding.textView.post {
+            val parent = binding.textView.parent as? android.widget.HorizontalScrollView
+            parent?.fullScroll(android.view.View.FOCUS_RIGHT)
+        }
+
+        if (!isFinal && currentExpression.isNotEmpty()) {
+            val previewResult = engine.evaluate(currentExpression, isLive = true)
+            if (previewResult is CalculatorEngine.Result.Success) {
+                binding.textViewPreview.text = previewResult.value
+            } else {
+                binding.textViewPreview.text = ""
+            }
+        } else {
+            binding.textViewPreview.text = ""
+        }
     }
 }

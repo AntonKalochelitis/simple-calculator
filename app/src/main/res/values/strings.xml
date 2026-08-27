@@ -14,6 +14,13 @@
     <string name="desc_close_bracket">Close Parenthesis</string>
     <string name="bracket_open">(</string>
     <string name="bracket_close">)</string>
+    <string name="op_divide">÷</string>
+    <string name="op_multiply">×</string>
+    <string name="op_minus">−</string>
+    <string name="op_plus">+</string>
+    <string name="op_percent">%</string>
+    <string name="op_equal">=</string>
+    <string name="op_backspace">⌫</string>
     <string name="desc_digit_0">Digit 0</string>
     <string name="desc_digit_1">Digit 1</string>
     <string name="desc_digit_2">Digit 2</string>

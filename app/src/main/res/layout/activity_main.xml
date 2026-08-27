@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,17 +8,41 @@
     android:padding="16dp"
     android:background="@color/background_color">
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:orientation="vertical"
         android:gravity="end"
-        android:maxLength="17"
-        android:padding="16dp"
-        android:text="0"
-        android:textColor="@color/text_color"
-        android:textSize="48sp" />
+        android:padding="8dp">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_gravity="end">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="end"
+                android:text="0"
+                android:textColor="@color/text_color"
+                android:textSize="56sp"
+                android:maxLines="1" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/textViewPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text=""
+            android:textColor="#888888"
+            android:textSize="24sp"
+            android:paddingTop="4dp" />
+    </LinearLayout>
 
     <GridLayout
         android:layout_width="match_parent"
@@ -28,159 +53,160 @@
         android:rowCount="6">
 
         <!-- Row 1 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonClear"
             style="@style/CalcButtonRed"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_ac"
+            android:padding="0dp"
             android:text="AC" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonBackspace"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_backspace"
-            android:text="←" />
+            android:padding="0dp"
+            android:text="@string/op_backspace" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonOpenBracket"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_open_bracket"
+            android:padding="0dp"
             android:text="@string/bracket_open" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCloseBracket"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_close_bracket"
+            android:padding="0dp"
             android:text="@string/bracket_close" />
 
         <!-- Row 2 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button7"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_7"
+            android:padding="0dp"
             android:text="7" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button8"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_8"
+            android:padding="0dp"
             android:text="8" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button9"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_9"
+            android:padding="0dp"
             android:text="9" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonDiv"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_divide"
-            android:text="/" />
+            android:padding="0dp"
+            android:text="@string/op_divide" />
 
         <!-- Row 3 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button4"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_4"
+            android:padding="0dp"
             android:text="4" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button5"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_5"
+            android:padding="0dp"
             android:text="5" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button6"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_6"
+            android:padding="0dp"
             android:text="6" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonMul"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_multiply"
-            android:text="*" />
+            android:padding="0dp"
+            android:text="@string/op_multiply" />
 
         <!-- Row 4 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button1"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_1"
+            android:padding="0dp"
             android:text="1" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button2"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_2"
+            android:padding="0dp"
             android:text="2" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_3"
+            android:padding="0dp"
             android:text="3" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSub"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_subtract"
-            android:text="-" />
+            android:padding="0dp"
+            android:text="@string/op_minus" />
 
         <!-- Row 5 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonPercent"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_percent"
-            android:text="%" />
+            android:padding="0dp"
+            android:text="@string/op_percent" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button0"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_digit_0"
+            android:padding="0dp"
             android:text="0" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonDot"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_dot"
+            android:padding="0dp"
             android:text="." />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonAdd"
             style="@style/CalcButtonBlue"
-            android:layout_gravity="fill"
             android:contentDescription="@string/desc_add"
-            android:text="+" />
+            android:padding="0dp"
+            android:text="@string/op_plus" />
 
         <!-- Row 6 -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonEqual"
             style="@style/CalcButtonBlue"
             android:layout_columnSpan="4"
             android:layout_gravity="fill"
             android:layout_rowWeight="0"
             android:contentDescription="@string/desc_equals"
-            android:text="=" />
+            android:padding="0dp"
+            android:text="@string/op_equal" />
 
     </GridLayout>
 </LinearLayout>

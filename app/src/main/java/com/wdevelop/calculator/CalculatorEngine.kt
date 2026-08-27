@@ -1,8 +1,8 @@
 package com.wdevelop.calculator
 
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.util.Stack
 
 class CalculatorEngine {
@@ -12,11 +12,27 @@ class CalculatorEngine {
         data class Error(val message: String) : Result()
     }
 
-    fun evaluate(expression: String): Result {
+    fun evaluate(expression: String, isLive: Boolean = false): Result {
         if (expression.isEmpty()) return Result.Success("0")
 
         return try {
-            val processedExpression = prepareExpression(expression)
+            var expr = expression
+            if (isLive) {
+                // Remove trailing operators for live preview
+                while (expr.isNotEmpty() && isOperator(expr.last().toString())) {
+                    expr = expr.dropLast(1)
+                }
+                if (expr.isEmpty()) return Result.Success("")
+                
+                // Balance parentheses for live preview
+                val openCount = expr.count { it == '(' }
+                val closeCount = expr.count { it == ')' }
+                if (openCount > closeCount) {
+                    expr += ")".repeat(openCount - closeCount)
+                }
+            }
+
+            val processedExpression = prepareExpression(expr)
             val tokens = tokenize(processedExpression)
             val rpn = shuntingYard(tokens)
             val result = evaluateRPN(rpn)
@@ -24,35 +40,33 @@ class CalculatorEngine {
         } catch (e: ArithmeticException) {
             Result.Error(e.message ?: "Error")
         } catch (e: Exception) {
-            Result.Error("Invalid Expression")
+            if (isLive) Result.Success("") else Result.Error("Invalid Expression")
         }
     }
 
     private fun prepareExpression(expression: String): String {
         val expr = expression.replace(" ", "")
         
-        // Handle implicit multiplication: digit( -> digit*(, )( -> )*(, )digit -> )*digit
         val result = StringBuilder()
         for (i in expr.indices) {
             val current = expr[i]
             result.append(current)
             if (i < expr.length - 1) {
                 val next = expr[i + 1]
+                // Implicit multiplication: 2( -> 2*(, )( -> )*(, )2 -> )*2
                 if ((current.isDigit() || current == ')') && next == '(') {
                     result.append('*')
-                } else if (current == ')' && next.isDigit()) {
+                } else if (current == ')' && (next.isDigit() || next == '.')) {
                     result.append('*')
                 }
             }
         }
         
-        // Handle unary minus at start or after (
-        // Convert -X to (0-X) or just mark it? Let's use a simpler trick: replace "-" with "u" if unary
         val finalExpr = StringBuilder()
         var prev: Char? = null
         for (char in result.toString()) {
             if (char == '-' && (prev == null || prev == '(' || isOperator(prev.toString()))) {
-                finalExpr.append('u') // 'u' for unary minus
+                finalExpr.append('u')
             } else {
                 finalExpr.append(char)
             }
@@ -92,13 +106,13 @@ class CalculatorEngine {
 
         for (token in tokens) {
             when {
-                token.toDoubleOrNull() != null -> output.add(token)
+                token.first().isDigit() || (token.length > 1 && token[1].isDigit()) -> output.add(token)
                 token == "(" -> operators.push(token)
                 token == ")" -> {
                     while (operators.isNotEmpty() && operators.peek() != "(") {
                         output.add(operators.pop())
                     }
-                    if (operators.isNotEmpty()) operators.pop() // Pop "("
+                    if (operators.isNotEmpty()) operators.pop()
                 }
                 isOperator(token) || token == "u" -> {
                     while (operators.isNotEmpty() && operators.peek() != "(" &&
@@ -115,20 +129,22 @@ class CalculatorEngine {
         return output
     }
 
-    private fun evaluateRPN(rpn: List<String>): Double {
-        val stack = Stack<Double>()
+    private fun evaluateRPN(rpn: List<String>): BigDecimal {
+        val stack = Stack<BigDecimal>()
+        val mc = MathContext(16, RoundingMode.HALF_UP)
+        
         for (token in rpn) {
-            val value = token.toDoubleOrNull()
+            val value = token.toBigDecimalOrNull()
             if (value != null) {
                 stack.push(value)
             } else if (token == "u") {
                 if (stack.isEmpty()) throw Exception("Invalid")
-                stack.push(-stack.pop())
+                stack.push(stack.pop().negate())
             } else {
                 if (stack.size < 2) throw Exception("Invalid")
                 val b = stack.pop()
                 val a = stack.pop()
-                stack.push(applyOperator(a, b, token))
+                stack.push(applyOperator(a, b, token, mc))
             }
         }
         if (stack.size != 1) throw Exception("Invalid")
@@ -140,45 +156,34 @@ class CalculatorEngine {
     private fun precedence(op: String): Int = when (op) {
         "+", "-" -> 1
         "*", "/", "%" -> 2
-        "u" -> 3 // Unary minus has higher precedence
+        "u" -> 3
         else -> 0
     }
 
-    private fun applyOperator(a: Double, b: Double, op: String): Double = when (op) {
-        "+" -> a + b
-        "-" -> a - b
-        "*" -> a * b
+    private fun applyOperator(a: BigDecimal, b: BigDecimal, op: String, mc: MathContext): BigDecimal = when (op) {
+        "+" -> a.add(b, mc)
+        "-" -> a.subtract(b, mc)
+        "*" -> a.multiply(b, mc)
         "/" -> {
-            if (b == 0.0) throw ArithmeticException("Divide by zero")
-            a / b
+            if (b.compareTo(BigDecimal.ZERO) == 0) throw ArithmeticException("Divide by zero")
+            a.divide(b, mc)
         }
-        "%" -> a / 100 * b // Existing percentage logic
-        else -> 0.0
+        "%" -> a.multiply(b, mc).divide(BigDecimal("100"), mc)
+        else -> BigDecimal.ZERO
     }
 
-    private fun formatResult(value: Double): String {
-        val decimalFormat = DecimalFormat("#.##########", DecimalFormatSymbols(Locale.US))
-        decimalFormat.isDecimalSeparatorAlwaysShown = false
-        return decimalFormat.format(value)
+    private fun formatResult(value: BigDecimal): String {
+        val stripped = value.stripTrailingZeros()
+        return stripped.toPlainString()
     }
 
     fun isValidAppend(currentExpression: String, newChar: String): Boolean {
         if (newChar == ".") {
-            // Rule 2.1: Allow point only after a digit
             if (currentExpression.isEmpty() || !currentExpression.last().isDigit()) {
                 return false
             }
-            // Rule 2.2: Only one point per fractional number
             val lastNumber = currentExpression.split("[-+*/%()]".toRegex()).last()
             return !lastNumber.contains(".")
-        }
-
-        if (newChar == "(") {
-            // Rule: Parenthesis can follow an operator or another open parenthesis
-            // or it can be at the start. Implicit multiplication is handled in prepareExpression,
-            // but for UI logic, we might want to restrict it or allow it.
-            // Current engine handles implicit multiplication (e.g. 2( -> 2*( ), so we allow it after digits too.
-            return true
         }
 
         if (newChar == ")") {

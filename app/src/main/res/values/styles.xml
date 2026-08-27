@@ -9,9 +9,17 @@
         <item name="android:layout_margin">4dp</item>
         <item name="android:layout_rowWeight">1</item>
         <item name="android:layout_columnWeight">1</item>
-        <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:background">@drawable/button_background_white</item>
+        <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/white</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">60sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
     <style name="CalcButtonBlue" parent="FontRobotoMonoText">
         <item name="android:layout_width">0dp</item>
@@ -19,9 +27,17 @@
         <item name="android:layout_margin">4dp</item>
         <item name="android:layout_rowWeight">1</item>
         <item name="android:layout_columnWeight">1</item>
-        <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:background">@drawable/button_background_blue</item>
+        <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/white</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">60sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
     <style name="CalcButtonRed" parent="FontRobotoMonoText">
         <item name="android:layout_width">0dp</item>
@@ -29,8 +45,16 @@
         <item name="android:layout_margin">4dp</item>
         <item name="android:layout_rowWeight">1</item>
         <item name="android:layout_columnWeight">1</item>
-        <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:background">@drawable/button_background_red</item>
+        <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/white</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">60sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 </resources>
